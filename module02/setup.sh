@@ -18,7 +18,7 @@ create_VDI() {
 	VM_DIR=$(dirname "$VBOX_FILE")
 
 #Create the vdi
-	vbmg createmedium --filename "$VM_DIR.vdi" --format VDI --size 10000
+	vbmg createmedium --filename "$VM_DIR/$VBOX_NAME.vdi" --format VDI --size 10000
 	echo "$VM_DIR.vdi has been created at $VM_DIR"
 }
 create_controller () {
@@ -29,7 +29,7 @@ create_controller () {
 
 attach_controller() {
 	vbmg storageattach $VBOX_NAME --storagectl "IDE" --medium 'C:\Users\Precidia\Downloads\CentOS-7-x86_64-Minimal-1810.iso' --port 1 --device 0 --type dvddrive 
-	vbmg storageattach $VBOX_NAME --storagectl "SATA" --medium "$VM_DIR.vdi" --port 0 --device 0 --type hdd 
+	vbmg storageattach $VBOX_NAME --storagectl "SATA" --medium "$VM_DIR/$VBOX_NAME.vdi" --port 0 --device 0 --type hdd 
 	echo "Controllers attached"
 	}
 
