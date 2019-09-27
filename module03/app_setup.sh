@@ -1,9 +1,30 @@
-#this script will run on the VM
-#installs and makes sure everything is ocuring in Virtual machine setup
-#run as root user
-#note to self, yum update then save snapshot
+#!/bin/bash
 
-#!/bin/bash -x
+install_apps() {
+	yum -y install wget
+	yum -y install epel-release vim git tcpdump curl net-tools bzip2
+	yum -y install nodejs npm
+	yum -y install mongodb-server
+	yum -y install nginx
+	yum -y update
+}
+
+setup_firewall() {
+	firewall-cmd --zone=public --add-service=ssh
+	firewall-cmd --zone=public --add-service=http
+	firewall-cmd --zone=public --add-service=https
+	firewall-cmd --runtime-to-permanent
+}
+
+start_services() {
+	systemctl enable mongod && systemctl start mongod
+	systemctl enable nginx && systemctl start ngnix
+}
+install_apps
+setup_firewall
+
+setenforce 0
+sed -r -i 's/SELINUX=(enforcing|disabled)/SELINUX=permissive/' /etc/selinux/config
 
 #create user
 useradd admin -G wheel
@@ -19,41 +40,25 @@ wget -P ~admin/.ssh/authorized_keys "https://acit4640.y.vu/docs/module02/resourc
 
 sed -r -i 's/^(%wheel\s+ALL=\(ALL\)\s+)(ALL)$/\1NOPASSWD: ALL/' /etc/sudoers
 
-yum -y install epel-release vim git tcpdump curl net-tools bzip2
-yum -y update
-
-firewall-cmd --zone=public --add-service=ssh
-firewall-cmd --zone=public --add-service=http
-firewall-cmd --zone=public --add-service=https
-firewall-cmd --runtime-to-permanent
-
-setenforce 0
-sed -r -i 's/SELINUX=(enforcing|disabled)/SELINUX=permissive/' /etc/selinux/config
-
 #service user
 useradd -m -r todo-app && passwd -l todo-app
-yum -y install nodejs npm
-yum -y install mongodb-server
-systemctl enable mongod && systemctl start mongod
 
+git clone https://github.com/precidiatom/acit_4640.git . 
 #application setup as todo user
 su - todo-app
 mkdir app
 cd app
 git clone https://github.com/timoguic/ACIT4640-todo-app.git .
 npm install
-chmod
-#CHANGE APP FOLDER TO CHMOD 755
-#edit config/database.js
-#sed somehtingsomething
-#or copy the file over
-#or somehow edit the file lmao
-
-#install nginx NEED TO BE ROOT - SO REARRANGE THE SCRIPT TO YUM INSTALL EVERYTHING FIRST
-yum -y install nginx
-#enable nginxs 
-systemctl enable nginx && systemctl start ngnix
+cd
+chmod -R 755 /home/todo-app/app/
+/bin/cp -rf acit_4640/module03/files/database.js ~todo-app/app/config/database.js
+/bin/cp -rf acit_4640/module03/files/nginx.conf /etc/nginx/nginx.conf
+nginx -s reload
+logout
 
 #create custom daemon
-#systemctl enable todoapp
-#systemctl start todoapp
+/bin/cp -rf acit_4640/module03/files/todoapp.service /lib/systemd/system
+systemctl daemon-reload
+start_services
+systemctl enable todoapp && systemctl start todoapp
