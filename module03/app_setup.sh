@@ -20,7 +20,7 @@ enable_services() {
 	systemctl enable mongod
 	systemctl enable nginx
 	systemctl enable todoapp
-	echo "enable services"
+	systemctl daemon-reload
 }
 install_apps
 setup_firewall
@@ -54,12 +54,13 @@ npm install
 chmod -R 755 /home/todo-app/
 /bin/cp -rf acit_4640/module03/files/database.js ~todo-app/app/config/database.js
 /bin/cp -rf acit_4640/module03/files/nginx.conf /etc/nginx/nginx.conf
-/bin/cp -rf acit_4640/module03/files/todoapp.service /lib/systemd/system
+/bin/cp -rf acit_4640/module03/files/todoapp.service /lib/systemd/system/todoapp.service
 nginx -s reload
+systemctl daemon-reload
 
 #create custom daemon
 enable_services
+
 systemctl start mongod
-systemctl daemon-reload
 systemctl start ngnix
 systemctl start todoapp
