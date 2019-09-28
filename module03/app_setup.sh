@@ -54,15 +54,12 @@ npm install
 chmod -R 755 /home/todo-app/
 /bin/cp -rf acit_4640/module03/files/database.js ~todo-app/app/config/database.js
 /bin/cp -rf acit_4640/module03/files/nginx.conf /etc/nginx/nginx.conf
+/bin/cp -rf acit_4640/module03/files/todoapp.service /lib/systemd/system
 nginx -s reload
 
-
 #create custom daemon
-/bin/cp -rf acit_4640/module03/files/todoapp.service /lib/systemd/system
 enable_services
-systemctl daemon-reload
 systemctl start mongod
+systemctl daemon-reload
 systemctl start ngnix
-echo "start nginx"
 systemctl start todoapp
-echo "todoapp started"
