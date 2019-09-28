@@ -43,22 +43,24 @@ sed -r -i 's/^(%wheel\s+ALL=\(ALL\)\s+)(ALL)$/\1NOPASSWD: ALL/' /etc/sudoers
 #service user
 useradd -m -r todo-app && passwd -l todo-app
 
-git clone https://github.com/precidiatom/acit_4640.git . 
+git clone https://github.com/precidiatom/acit_4640.git  
+echo "start of todo app"
 #application setup as todo user
 su - todo-app
 mkdir app
 cd app
-git clone https://github.com/timoguic/ACIT4640-todo-app.git .
+git clone https://github.com/timoguic/ACIT4640-todo-app.git
 npm install
-cd
+logout
 chmod -R 755 /home/todo-app/app/
 /bin/cp -rf acit_4640/module03/files/database.js ~todo-app/app/config/database.js
 /bin/cp -rf acit_4640/module03/files/nginx.conf /etc/nginx/nginx.conf
 nginx -s reload
-logout
+
 
 #create custom daemon
 /bin/cp -rf acit_4640/module03/files/todoapp.service /lib/systemd/system
 systemctl daemon-reload
 start_services
 systemctl enable todoapp && systemctl start todoapp
+echo "todoapp started"
