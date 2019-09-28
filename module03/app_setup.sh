@@ -59,8 +59,8 @@ nginx -s reload
 
 #create custom daemon
 /bin/cp -rf acit_4640/module03/files/todoapp.service /lib/systemd/system
-systemctl daemon-reload
 enable_services
+systemctl daemon-reload
 systemctl start mongod
 systemctl start ngnix
 echo "start nginx"
