@@ -17,10 +17,10 @@ setup_firewall() {
 }
 
 enable_services() {
-	systemctl enable mongod
-	systemctl enable nginx
-	systemctl enable todoapp
-	systemctl daemon-reload
+	systemctl enable mongod && systemctl start mongod
+	systemctl enable todoapp && systemctl start todoapp
+	systemctl enable nginx && systemctl start nginx
+
 }
 install_apps
 setup_firewall
@@ -33,34 +33,27 @@ useradd admin -G wheel
 echo "P@ssw0rd" | passwd --stdin admin
 
 #create shh folder if no exist 
-mkdir ~admin/.ssh/authorized_keys
-chown admin:wheel /home/admin/.ssh/authorized_keys/acit_admin_id_rsa.pub
+mkdir /home/admin/.ssh/authorized_keys
 
 #create SSH key
-yum -y install wget
 wget -P ~admin/.ssh/authorized_keys "https://acit4640.y.vu/docs/module02/resources/acit_admin_id_rsa.pub"
+chown admin:wheel /home/admin/.ssh/authorized_keys/acit_admin_id_rsa.pub
 
 sed -r -i 's/^(%wheel\s+ALL=\(ALL\)\s+)(ALL)$/\1NOPASSWD: ALL/' /etc/sudoers
 
 #service user
 useradd -m -r todo-app && passwd -l todo-app
 
-
-echo "start of todo app"
 #application setup as todo user
 runuser -l todo-app -c "mkdir app"
 git clone https://github.com/timoguic/ACIT4640-todo-app.git /home/todo-app/app
-npm install
+npm install /home/todo-app/app
 chmod -R 755 /home/todo-app/
 /bin/cp -rf acit_4640/module03/files/database.js ~todo-app/app/config/database.js
 /bin/cp -rf acit_4640/module03/files/nginx.conf /etc/nginx/nginx.conf
-/bin/cp -rf acit_4640/module03/files/todoapp.service /lib/systemd/system/todoapp.service
 nginx -s reload
+
+/bin/cp -rf acit_4640/module03/files/todoapp.service /lib/systemd/system/todoapp.service
 systemctl daemon-reload
 
-#create custom daemon
 enable_services
-
-systemctl start mongod
-systemctl start ngnix
-systemctl start todoapp
