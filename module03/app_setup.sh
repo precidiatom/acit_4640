@@ -49,7 +49,7 @@ echo "start of todo app"
 runuser -l todo-app -c "mkdir app"
 git clone https://github.com/timoguic/ACIT4640-todo-app.git /home/todo-app/app
 npm install
-chmod -R 755 /home/todo-app/app/
+chmod -R 755 /home/todo-app/
 /bin/cp -rf acit_4640/module03/files/database.js ~todo-app/app/config/database.js
 /bin/cp -rf acit_4640/module03/files/nginx.conf /etc/nginx/nginx.conf
 nginx -s reload
