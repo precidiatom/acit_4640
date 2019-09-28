@@ -16,9 +16,11 @@ setup_firewall() {
 	firewall-cmd --runtime-to-permanent
 }
 
-start_services() {
-	systemctl enable mongod && systemctl start mongod
-	systemctl enable nginx && systemctl start ngnix
+enable_services() {
+	systemctl enable mongod
+	systemctl enable nginx
+	systemctl enable todoapp
+	echo "enable services"
 }
 install_apps
 setup_firewall
@@ -58,6 +60,9 @@ nginx -s reload
 #create custom daemon
 /bin/cp -rf acit_4640/module03/files/todoapp.service /lib/systemd/system
 systemctl daemon-reload
-start_services
-systemctl enable todoapp && systemctl start todoapp
+enable_services
+systemctl start mongod
+systemctl start ngnix
+echo "start nginx"
+systemctl start todoapp
 echo "todoapp started"
