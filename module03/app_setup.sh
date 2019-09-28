@@ -48,7 +48,7 @@ echo "start of todo app"
 #application setup as todo user
 su - todo-app
 mkdir app
-git clone https://github.com/timoguic/ACIT4640-todo-app.git /app
+git clone https://github.com/timoguic/ACIT4640-todo-app.git /home/todo-app/app
 npm install
 logout
 chmod -R 755 /home/todo-app/app/
