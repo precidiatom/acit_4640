@@ -25,7 +25,7 @@ setup_firewall
 
 setenforce 0
 sed -r -i 's/SELINUX=(enforcing|disabled)/SELINUX=permissive/' /etc/selinux/config
-
+git clone https://github.com/precidiatom/acit_4640.git .
 #create user
 useradd admin -G wheel
 echo "P@ssw0rd" | passwd --stdin admin
@@ -43,13 +43,12 @@ sed -r -i 's/^(%wheel\s+ALL=\(ALL\)\s+)(ALL)$/\1NOPASSWD: ALL/' /etc/sudoers
 #service user
 useradd -m -r todo-app && passwd -l todo-app
 
-git clone https://github.com/precidiatom/acit_4640.git  
+
 echo "start of todo app"
 #application setup as todo user
 su - todo-app
 mkdir app
-cd app
-git clone https://github.com/timoguic/ACIT4640-todo-app.git
+git clone https://github.com/timoguic/ACIT4640-todo-app.git /app
 npm install
 logout
 chmod -R 755 /home/todo-app/app/
