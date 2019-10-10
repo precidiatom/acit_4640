@@ -17,7 +17,7 @@ vbmg natnetwork modify --netname $NAT_NAME --port-forward-4 "ssh:tcp:[]:50022:[1
 create_VM() {
 	vbmg createvm --name $VBOX_NAME --ostype "RedHat_64" --register
 	vbmg modifyvm $VBOX_NAME --memory 1564 --cpus 1 --audio none \
-	--nic1 natnetwork --nat-network1 $NAT_NAME --boot1 disk --boot2 net #--cableconnected1 on
+	--nic1 natnetwork --nat-network1 $NAT_NAME --boot1 disk --boot2 net --boot3 none --boot4 none
 	echo "VM created"
 }
 #Find the directory
@@ -44,8 +44,6 @@ attach_controller() {
 	}
 
 connect_pxe() {
-	#ensure key is read
-
 	vbmg startvm $PXE_NAME
 	while /bin/true; do
 		ssh -i files/acit_admin_id_rsa -p 50222 -o ConnectTimeout=2 \
@@ -69,16 +67,16 @@ copy_files(){
 	scp -i files/acit_admin_id_rsa -P 50222 files/nginx.conf admin@localhost:/var/www/lighttpd/files/nginx.conf
 	scp -i files/acit_admin_id_rsa -P 50222 files/todoapp.service admin@localhost:/var/www/lighttpd/files/todoapp.service
 	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod a+r /var/www/lighttpd/files/*"
-	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod a+rx /var/www/lighttpd/*"	
+	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod a+rx /var/www/lighttpd/*"
 
 	echo "Done copying files!!!"
 }
-https://acit4640.y.vu/docs/module02/resources/acit_admin_id_rsa
+
 create_VM
 create_VDI
 create_controller
 attach_controller
-/bin/chmod a+r files/acit_admin_id_rsa 
+/bin/chmod a+r files/acit_admin_id_rsa
 connect_pxe
 copy_files
 vbmg startvm $VBOX_NAME
