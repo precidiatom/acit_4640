@@ -6,12 +6,20 @@ NAT_NAME="net_4640"
 VBOX_NAME="VM_ACIT4640"
 PXE_NAME="PXE_4640"
 
+clean_up() {
+    vbmg natnetwork remove --netname $NAT_NAME
+    vbmg unregistervm $VBOX_NAME --delete
+	echo "GET RID OF $NAT_NAME and $VBOX_NAME IF IT EXISTS"
+}
 #Create the network and port forwarding rules
-vbmg natnetwork add --netname $NAT_NAME --network "192.168.250.0/24" --enable --dhcp off --ipv6 off
-vbmg natnetwork modify --netname $NAT_NAME --port-forward-4 "ssh:tcp:[]:50022:[192.168.250.10]:22" \
-	--port-forward-4 "http:tcp:[]:50080:[192.168.250.10]:80" \
-	--port-forward-4 "https:tcp:[]:50443:[192.168.250.10]:443"\
-	--port-forward-4 "ssh2:tcp:[]:50222:[192.168.250.200]:22"\
+create_network(){
+	vbmg natnetwork add --netname $NAT_NAME --network "192.168.250.0/24" --enable --dhcp off --ipv6 off
+	vbmg natnetwork modify --netname $NAT_NAME --port-forward-4 "ssh:tcp:[]:50022:[192.168.250.10]:22" \
+		--port-forward-4 "http:tcp:[]:50080:[192.168.250.10]:80" \
+		--port-forward-4 "https:tcp:[]:50443:[192.168.250.10]:443"\
+		--port-forward-4 "ssh2:tcp:[]:50222:[192.168.250.200]:22"
+	echo "CREATED THE NETWORK"
+	}	
 	
 #Create the VM shells
 create_VM() {
@@ -20,6 +28,7 @@ create_VM() {
 	--nic1 natnetwork --nat-network1 $NAT_NAME --boot1 disk --boot2 net --boot3 none --boot4 none
 	echo "VM created"
 }
+
 #Find the directory
 create_VDI() {
 	SED_PROGRAM="/^Config file:/ { s/^.*:\s\+\(\S\+\)/\1/; s|\\\\|/|gp }"
@@ -72,6 +81,8 @@ copy_files(){
 	echo "Done copying files!!!"
 }
 
+clean_up
+create_network
 create_VM
 create_VDI
 create_controller
