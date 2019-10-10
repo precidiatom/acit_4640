@@ -40,18 +40,6 @@ create_VDI() {
 	echo "$VM_DIR.vdi has been created at $VM_DIR"
 }
 
-create_controller () {
-	vbmg storagectl $VBOX_NAME --name "SATA" --add sata --controller IntelAhci #--bootable on 
-	vbmg storagectl $VBOX_NAME --name "IDE" --add ide --controller PIIX4 #--bootable on
-	echo "Controllers created"
-}
-
-attach_controller() {
-	vbmg storageattach $VBOX_NAME --storagectl "IDE" --medium 'C:\Users\Precidia\Downloads\CentOS-7-x86_64-Minimal-1810.iso' --port 1 --device 0 --type dvddrive 
-	vbmg storageattach $VBOX_NAME --storagectl "SATA" --medium "$VM_DIR/$VBOX_NAME.vdi" --port 0 --device 0 --type hdd 
-	echo "Controllers attached"
-	}
-
 connect_pxe() {
 	vbmg startvm $PXE_NAME
 	while /bin/true; do
@@ -85,8 +73,6 @@ clean_up
 create_network
 create_VM
 create_VDI
-create_controller
-attach_controller
 /bin/chmod 400 files/acit_admin_id_rsa
 connect_pxe
 copy_files
