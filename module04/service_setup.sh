@@ -76,7 +76,7 @@ create_VM
 create_VDI
 create_controller
 attach_controller
-/bin/chmod a+r files/acit_admin_id_rsa
+/bin/chmod 400 files/acit_admin_id_rsa
 connect_pxe
 copy_files
 vbmg startvm $VBOX_NAME
