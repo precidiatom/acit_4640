@@ -75,8 +75,8 @@ copy_files(){
 	scp -i files/acit_admin_id_rsa -P 50222 files/database.js admin@localhost:/var/www/lighttpd/files/database.js
 	scp -i files/acit_admin_id_rsa -P 50222 files/nginx.conf admin@localhost:/var/www/lighttpd/files/nginx.conf
 	scp -i files/acit_admin_id_rsa -P 50222 files/todoapp.service admin@localhost:/var/www/lighttpd/files/todoapp.service
-	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod 400 /var/www/lighttpd/files"
-	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod 755 /var/www/lighttpd/"
+	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod 400 -R /var/www/lighttpd/files"
+	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod 755 -R /var/www/lighttpd/"
 
 	echo "DONE COPYING FILES AND MODIFYING PERMISSIONS!!"
 }
