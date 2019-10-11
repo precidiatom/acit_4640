@@ -45,7 +45,7 @@ create_VDI() {
 
 create_controller () {
 	vbmg storagectl $VBOX_NAME --name "SATA" --add sata --controller IntelAhci 
-	vbmg storagectl $VBOX_NAME --name "IDE" --add ide --controller PIIX4
+	#vbmg storagectl $VBOX_NAME --name "IDE" --add ide --controller PIIX4
 	echo "Controllers created"
 }
 
@@ -75,14 +75,14 @@ copy_files(){
 	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chown admin /var/www/lighttpd/"
 	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "mkdir /var/www/lighttpd/files"
 	scp -i files/acit_admin_id_rsa -P 50222 files/ks.cfg admin@localhost:/var/www/lighttpd/ks.cfg
+	scp -i files/acit_admin_id_rsa -P 50222 files/acit_admin_id_rsa.pub admin@localhost:/var/www/lighttpd/files/acit_admin_id_rsa.pub
 	scp -i files/acit_admin_id_rsa -P 50222 files/database.js admin@localhost:/var/www/lighttpd/files/database.js
 	scp -i files/acit_admin_id_rsa -P 50222 files/nginx.conf admin@localhost:/var/www/lighttpd/files/nginx.conf
 	scp -i files/acit_admin_id_rsa -P 50222 files/todoapp.service admin@localhost:/var/www/lighttpd/files/todoapp.service
-	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod 400 /var/www/lighttpd/files/*"
+	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod 400 /var/www/lighttpd/files"
 	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod 755 /var/www/lighttpd/"
 
-	echo "DONE COPYING FILES AND MODIFYING PERMISSIONS!!
-}
+	echo "DONE COPYING FILES AND MODIFYING PERMISSIONS!!"
 
 clean_up
 create_network
@@ -93,4 +93,3 @@ connect_pxe
 copy_files
 vbmg startvm $VBOX_NAME
 echo "CHECK OUT THE OS INSTALLATION ON $VBOX_NAME"
-
