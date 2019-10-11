@@ -88,6 +88,8 @@ clean_up
 create_network
 create_VM
 create_VDI
+create_controller
+attach_controller
 /bin/chmod 400 files/acit_admin_id_rsa
 connect_pxe
 copy_files
