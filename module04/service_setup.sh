@@ -9,8 +9,8 @@ PXE_NAME="PXE_4640"
 clean_up() {
     vbmg natnetwork remove --netname $NAT_NAME
     vbmg unregistervm $VBOX_NAME --delete
-	echo "GET RID OF $NAT_NAME and $VBOX_NAME IF IT EXISTS"
 }
+
 #Create the network and port forwarding rules
 create_network(){
 	vbmg natnetwork add --netname $NAT_NAME --network "192.168.250.0/24" --enable --dhcp off --ipv6 off
@@ -24,7 +24,7 @@ create_network(){
 #Create the VM shells
 create_VM() {
 	vbmg createvm --name $VBOX_NAME --ostype "RedHat_64" --register
-	vbmg modifyvm $VBOX_NAME --memory 1564 --cpus 1 --audio none \
+	vbmg modifyvm $VBOX_NAME --memory 1664 --cpus 1 --audio none \
 	--nic1 natnetwork --nat-network1 $NAT_NAME --boot1 disk --boot2 net --boot3 none --boot4 none
 	echo "VM created"
 }
@@ -75,7 +75,6 @@ copy_files(){
 	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chown admin /var/www/lighttpd/"
 	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "mkdir /var/www/lighttpd/files"
 	scp -i files/acit_admin_id_rsa -P 50222 files/ks.cfg admin@localhost:/var/www/lighttpd/ks.cfg
-	scp -i files/acit_admin_id_rsa -P 50222 files/acit_admin_id_rsa.pub admin@localhost:/var/www/lighttpd/files/acit_admin_id_rsa.pub
 	scp -i files/acit_admin_id_rsa -P 50222 files/database.js admin@localhost:/var/www/lighttpd/files/database.js
 	scp -i files/acit_admin_id_rsa -P 50222 files/nginx.conf admin@localhost:/var/www/lighttpd/files/nginx.conf
 	scp -i files/acit_admin_id_rsa -P 50222 files/todoapp.service admin@localhost:/var/www/lighttpd/files/todoapp.service
