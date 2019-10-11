@@ -79,7 +79,7 @@ copy_files(){
 	ssh -i files/acit_admin_id_rsa -p 50222 admin@localhost "sudo chmod 755 /var/www/lighttpd/"
 
 	echo "DONE COPYING FILES AND MODIFYING PERMISSIONS!!"
-
+}
 clean_up
 create_network
 create_VM
