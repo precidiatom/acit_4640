@@ -29,7 +29,6 @@ create_VM() {
 	echo "VM created"
 }
 
-
 #Find the directory
 create_VDI() {
 	SED_PROGRAM="/^Config file:/ { s/^.*:\s\+\(\S\+\)/\1/; s|\\\\|/|gp }"
@@ -45,13 +44,11 @@ create_VDI() {
 
 create_controller () {
 	vbmg storagectl $VBOX_NAME --name "SATA" --add sata --controller IntelAhci 
-	#vbmg storagectl $VBOX_NAME --name "IDE" --add ide --controller PIIX4
 	echo "Controllers created"
 }
 
 attach_controller() {
-	#vbmg storageattach $VBOX_NAME --storagectl "IDE" --medium 'C:\Users\Precidia\Downloads\CentOS-7-x86_64-Minimal-1810.iso' --port 1 --device 0 --type dvddrive 
-	vbmg storageattach $VBOX_NAME --storagectl "SATA" --medium "$VM_DIR/$VBOX_NAME.vdi" --port 0 --device 0 --type hdd 
+	vbmg storageattach $VBOX_NAME --storagectl "SATA" --medium "$VM_DIR/$VBOX_NAME.vdi" --port 0 --device 0 --type hdd
 	echo "Controllers attached"
 	}
 	
