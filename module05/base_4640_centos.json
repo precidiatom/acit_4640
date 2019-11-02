@@ -57,7 +57,7 @@
 		{
             "type": "shell",
             "inline": [
-                "mkdir /home/{{ user `admin_passwd` }}/.ssh"
+                "mkdir /home/{{ user `admin_user` }}/.ssh"
             ]
         },
         {
