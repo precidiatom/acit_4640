@@ -1,0 +1,107 @@
+---
+- hosts: todo
+  become: yes
+  tasks:
+    - name: install nginx
+      become: yes
+      package:
+        name: nginx
+        state: present
+    - name: install MongoDB server
+      become: yes      
+      package:
+        name: mongodb-server
+        state: present
+    - name: install NodeJS
+      yum:
+        name: nodejs
+        state: present
+    - name: install NPM
+      become: yes
+      yum:
+        name: npm
+        state: present
+    - name: install git
+      become: yes    
+      package:
+        name: git
+        state: present
+    - name: Disable SELinux
+      become: yes
+      selinux:
+        state: disabled
+    - name: Create user 'todoapp'
+      become: yes
+      user:
+        name: todoapp
+        comment: todoapp
+    - name: copy todo service file
+      become: yes
+      copy:
+        src: ../files/todoapp.service
+        dest: /lib/systemd/system/todoapp.service
+    - name: copy nginx file over
+      become: yes
+      copy:
+        src: ../files/nginx.conf
+        dest: /etc/nginx/nginx.conf
+        owner: nginx
+    - git:
+        repo: https://github.com/timoguic/ACIT4640-todo-app.git
+        dest: /home/todoapp/app
+        clone: yes
+        force: yes
+    - name: copy the database file over
+      become: yes
+      copy:
+        src: ../files/database.js
+        dest: /home/todoapp/app/config/database.js
+        owner: todoapp
+    - name: install npm
+      command: npm install
+
+      args:
+        chdir: /home/todoapp/app
+    - name: Change permissions for todoapp/app
+      file:
+        path: /home/todoapp
+        owner: todoapp
+        mode: 0755
+
+    - firewalld:
+        service: http
+        permanent: yes
+        immediate: yes
+        state: enabled
+    - firewalld:
+        service: https
+        permanent: yes
+        immediate: yes
+        state: enabled
+    - firewalld:
+        service: ssh
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: enable nginx service
+      become: yes
+      service: 
+        name: nginx
+        enabled: yes
+        state: started
+    - name: enable mongod service
+      become: yes
+      service: 
+        name: mongod
+        enabled: yes
+        state: started
+    - name: Create todoapp Service
+      become: yes
+      systemd:
+        name: todoapp.service
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+
