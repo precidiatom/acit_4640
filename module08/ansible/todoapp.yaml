@@ -1,0 +1,7 @@
+---
+- hosts: todoapp
+  tasks:
+    - include_role:
+       name: base
+    - include_role:
+       name: todoapp

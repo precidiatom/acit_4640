@@ -1,0 +1,33 @@
+---
+  - name: open up http port so we can see it
+    become: yes
+    firewalld:
+      service: http
+      permanent: yes
+      immediate: yes
+      state: enabled
+  - name: open up https port
+    become: yes
+    firewalld:
+      service: https
+      permanent: yes
+      immediate: yes
+      state: enabled
+  - name: git clone the repository
+    become: yes
+    git:
+      repo: '{{ todorepo }}'
+      dest: '{{ todopath }}'
+      clone: yes
+      force: yes
+  - name: install npm
+    become: yes
+    command: npm install
+    args:
+      chdir: '{{ todopath }}'
+  - name: change permissions for todoapp/app 
+    become: yes
+    file:
+      path: /home/todoapp
+      owner: '{{ owner }}'
+      mode: 0755

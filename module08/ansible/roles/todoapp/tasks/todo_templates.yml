@@ -1,0 +1,12 @@
+---
+  - name: copy todo service template
+    become: yes
+    template:
+      src: todoapp_service.j2
+      dest: '{{ todoservicepath }}'
+  - name: copy the database template
+    become: yes
+    template:
+      src: database.j2
+      dest: '{{ todopath }}/config/database.js'
+      owner: '{{ owner }}'

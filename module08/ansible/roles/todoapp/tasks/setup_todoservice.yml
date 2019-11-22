@@ -1,0 +1,8 @@
+---
+  - name: Create todoapp Service
+    become: yes
+    systemd:
+      name: todoapp.service
+      enabled: yes
+      state: started
+      daemon_reload: yes

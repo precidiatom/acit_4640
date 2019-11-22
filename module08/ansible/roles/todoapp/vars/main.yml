@@ -1,0 +1,6 @@
+---
+portnum: 8080
+todorepo: https://github.com/timoguic/ACIT4640-todo-app.git
+todopath: /home/todoapp/app
+todoservicepath: /lib/systemd/system/todoapp.service
+owner: todoapp

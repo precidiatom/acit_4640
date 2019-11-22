@@ -1,0 +1,12 @@
+---
+  - name: Create user todoapp
+    include_tasks: create_todo.yml
+
+  - name: Clone repo and npm install
+    include_tasks: setup_todoapp.yml
+
+  - name: Copy the templates
+    include_tasks: todo_templates.yml 
+
+  - name: Setup todoapp service
+    include_tasks: setup_todoservice.yml

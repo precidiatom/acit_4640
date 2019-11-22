@@ -1,0 +1,18 @@
+---
+    - name: install nginx
+      become: yes
+      package:
+        name: nginx
+        state: present
+    - name: copy nginx template
+      become: yes
+      template:
+        src: nginx_conf.j2
+        dest: /etc/nginx/nginx.conf
+        owner: nginx
+    - name: enable nginx service
+      become: yes
+      service: 
+        name: nginx
+        enabled: yes
+        state: started

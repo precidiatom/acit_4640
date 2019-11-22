@@ -1,0 +1,16 @@
+---
+    - name: install NodeJS
+      become: yes
+      yum:
+        name: nodejs
+        state: present
+    - name: install NPM
+      become: yes
+      yum:
+        name: npm
+        state: present
+    - name: install git
+      become: yes    
+      package:
+        name: git
+        state: present

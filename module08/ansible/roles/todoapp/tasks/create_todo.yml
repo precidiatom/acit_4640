@@ -1,0 +1,6 @@
+---
+  - name: Create user 'todoapp'
+    become: yes
+    user:
+      name: todoapp
+      comment: todoapp
